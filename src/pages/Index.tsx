@@ -1,513 +1,302 @@
-import { useState, useEffect, useRef } from 'react';
-import Icon from '@/components/ui/icon';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { toast } from '@/hooks/use-toast';
-
-interface BathHouse {
-  id: number;
-  name: string;
-  capacity: string;
-  price: string;
-  features: string[];
-  image: string;
-  description: string;
-}
+import Icon from '@/components/ui/icon';
 
 export default function Index() {
-  const [selectedHouse, setSelectedHouse] = useState<number | null>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [activeSection, setActiveSection] = useState('hero');
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const handleBooking = (e: React.FormEvent) => {
+    e.preventDefault();
+    alert('Спасибо! Мы свяжемся с вами в ближайшее время.');
+  };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const currentProgress = (window.scrollY / totalScroll) * 100;
-      setScrollProgress(currentProgress);
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    element?.scrollIntoView({ behavior: 'smooth' });
+  };
 
-      const sections = ['hero', 'about', 'houses', 'rituals', 'gallery', 'booking'];
-      const current = sections.find(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
-      });
-      if (current) setActiveSection(current);
-    };
-
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, []);
-
-  const bathHouses: BathHouse[] = [
+  const houses = [
     {
-      id: 1,
-      name: 'Изба',
-      capacity: 'До 6 человек',
-      price: '4000 ₽/час',
-      features: ['Русская печь', 'Дубовые веники', 'Чан под звёздами'],
-      image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80',
-      description: 'Аутентичная русская баня с вековыми традициями'
+      name: 'Боярская',
+      capacity: '6-8 человек',
+      price: '8 000 ₽/час',
+      features: ['Купель из лиственницы', 'Печь на дровах', 'Веники в подарок'],
+      image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80'
     },
     {
-      id: 2,
-      name: 'Терем',
-      capacity: 'До 10 человек',
-      price: '6000 ₽/час',
-      features: ['Панорамные окна', 'Бассейн', 'Массажная комната'],
-      image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80',
-      description: 'Современный комфорт в традиционном исполнении'
+      name: 'Княжеская',
+      capacity: '10-12 человек',
+      price: '12 000 ₽/час',
+      features: ['Чан под звёздами', 'Панорамные окна', 'Бильярдная'],
+      image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80'
     },
     {
-      id: 3,
-      name: 'Усадьба Premium',
-      capacity: 'До 15 человек',
-      price: '10000 ₽/час',
-      features: ['Два парных отделения', 'Караоке', 'Банкетный зал', 'Барбекю-зона'],
-      image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80',
-      description: 'Премиальное пространство для особых событий'
+      name: 'Купеческая',
+      capacity: '4-6 человек',
+      price: '6 000 ₽/час',
+      features: ['Камин', 'Травяные чаи', 'Терраса у реки'],
+      image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80'
+    },
+    {
+      name: 'Царская VIP',
+      capacity: '12-16 человек',
+      price: '18 000 ₽/час',
+      features: ['Массажная зона', 'Караоке', 'Ресторанный зал', 'Частный берег'],
+      image: 'https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=600&q=80'
     }
   ];
 
   const rituals = [
-    { icon: 'Leaf', title: 'Веничный массаж', desc: 'Традиционный массаж дубовыми и берёзовыми вениками' },
-    { icon: 'Droplets', title: 'Ароматерапия', desc: 'Эфирные масла кедра, эвкалипта и мяты' },
-    { icon: 'Flame', title: 'Контрастные процедуры', desc: 'Чередование жара и прохладной купели' },
-    { icon: 'Sparkles', title: 'Травяные настои', desc: 'Целебные чаи из таёжных трав' }
+    {
+      icon: 'Sparkles',
+      title: 'Парение вениками',
+      desc: 'Древний ритуал с берёзовыми, дубовыми и эвкалиптовыми вениками от мастера-парильщика'
+    },
+    {
+      icon: 'Droplets',
+      title: 'Ароматерапия',
+      desc: 'Натуральные масла сибирского кедра, таёжной пихты и лугового разнотравья'
+    },
+    {
+      icon: 'Flame',
+      title: 'Контрастные процедуры',
+      desc: 'Чередование жара парной и прохлады купели — баланс огня и воды'
+    },
+    {
+      icon: 'Heart',
+      title: 'Травяные чаи',
+      desc: 'Сборы по старинным рецептам: иван-чай, чабрец, душица с мёдом'
+    }
   ];
 
-  const handleBooking = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast({
-      title: "Заявка отправлена!",
-      description: "Мы свяжемся с вами в ближайшее время",
-    });
-  };
-
-  const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   return (
-    <div className="min-h-screen bg-graphite relative">
-      {/* Custom Cursor Effect */}
-      <div 
-        className="fixed w-8 h-8 rounded-full border-2 border-copper pointer-events-none z-50 mix-blend-difference hidden lg:block"
-        style={{
-          left: `${mousePosition.x}px`,
-          top: `${mousePosition.y}px`,
-          transform: 'translate(-50%, -50%)',
-          transition: 'all 0.1s ease'
-        }}
-      />
-
-      {/* Vertical Navigation */}
-      <nav className="fixed right-8 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-4">
-        {[
-          { id: 'hero', label: 'Главная', icon: 'Home' },
-          { id: 'houses', label: 'Дома', icon: 'Building2' },
-          { id: 'rituals', label: 'Ритуалы', icon: 'Sparkles' },
-          { id: 'gallery', label: 'Галерея', icon: 'Image' },
-          { id: 'booking', label: 'Бронь', icon: 'Calendar' }
-        ].map(item => (
-          <button
-            key={item.id}
-            onClick={() => scrollToSection(item.id)}
-            className={`group flex items-center gap-3 transition-all duration-300 ${
-              activeSection === item.id ? 'opacity-100' : 'opacity-40 hover:opacity-70'
-            }`}
-          >
-            <span className="text-xs text-cream font-heading opacity-0 group-hover:opacity-100 transition-opacity">
-              {item.label}
-            </span>
-            <div className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              activeSection === item.id 
-                ? 'bg-copper scale-150' 
-                : 'bg-cream scale-100'
-            }`} />
-          </button>
-        ))}
-      </nav>
-
-      {/* Scroll Progress Bar */}
-      <div className="fixed top-0 left-0 w-full h-1 bg-graphite z-50">
-        <div 
-          className="h-full bg-gradient-to-r from-copper via-honey-gold to-copper"
-          style={{ width: `${scrollProgress}%`, transition: 'width 0.1s ease' }}
-        />
-      </div>
-
-      {/* Hero Section */}
+    <div className="min-h-screen bg-graphite font-body text-cream overflow-x-hidden">
+      {/* Hero Section with Video Background */}
       <section id="hero" className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* Animated Background Layers */}
-        <div className="absolute inset-0">
-          <div 
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: 'url(https://images.unsplash.com/photo-1521133573892-e44906baee46?w=1920&q=80)',
-              filter: 'brightness(0.3)'
-            }}
-          />
-          {[...Array(5)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full bg-copper/10 blur-3xl"
-              style={{
-                width: `${Math.random() * 400 + 200}px`,
-                height: `${Math.random() * 400 + 200}px`,
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animation: `float ${Math.random() * 20 + 10}s ease-in-out infinite`,
-                animationDelay: `${i * 2}s`
-              }}
-            />
-          ))}
+        {/* Video Background */}
+        <div className="absolute inset-0 z-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover opacity-30"
+          >
+            <source src="https://cdn.coverr.co/videos/coverr-steam-rising-from-hot-springs-8493/1080p.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-gradient-to-b from-graphite/80 via-graphite/60 to-graphite"></div>
         </div>
-        
-        <div className="relative z-10 w-full h-full flex items-center justify-center px-4">
-          <div className="max-w-7xl w-full grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Side - Text */}
-            <div className="text-left">
-              <div className="mb-8">
-                <div 
-                  className="text-7xl md:text-9xl font-heading font-bold text-transparent bg-clip-text bg-gradient-to-br from-honey-gold via-copper to-honey-gold mb-4"
-                  style={{ 
-                    lineHeight: '0.9',
-                    WebkitTextStroke: '1px rgba(205, 127, 50, 0.3)'
-                  }}
-                >
-                  STEAM
-                  <br />
-                  LAB
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="h-px bg-gradient-to-r from-copper to-transparent flex-1"></div>
-                  <span className="text-copper text-sm tracking-[0.3em]">EST. 2024</span>
-                </div>
-              </div>
-              
-              <h1 className="text-2xl md:text-4xl font-heading mb-6 text-cream tracking-wide">
-                Пар. Камень. Время.
-              </h1>
-              
-              <p className="text-base md:text-lg mb-12 text-warm-light/80 max-w-md leading-relaxed">
-                Здесь древность дышит через современность. 
-                Каждая капля пара — история. Каждый камень — память.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button 
-                  size="lg" 
-                  className="bg-copper hover:bg-honey-gold text-white font-heading text-base border-2 border-copper hover:border-honey-gold transition-all duration-300 group"
-                  onClick={() => scrollToSection('booking')}
-                >
-                  Забронировать
-                  <Icon name="ArrowRight" size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
-                <Button 
-                  size="lg" 
-                  variant="ghost" 
-                  className="border-2 border-cream/30 text-cream hover:bg-cream/10 font-heading text-base"
-                  onClick={() => scrollToSection('houses')}
-                >
-                  Исследовать
-                </Button>
-              </div>
-            </div>
 
-            {/* Right Side - Visual Element */}
-            <div className="hidden lg:block relative h-[600px]">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative w-full h-full">
-                  {/* Rotating Circle */}
-                  <svg className="absolute inset-0 w-full h-full animate-spin-slow" style={{ animationDuration: '30s' }}>
-                    <circle
-                      cx="50%"
-                      cy="50%"
-                      r="45%"
-                      fill="none"
-                      stroke="url(#gradient)"
-                      strokeWidth="1"
-                      strokeDasharray="4 8"
-                      opacity="0.3"
-                    />
-                    <defs>
-                      <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#CD7F32" />
-                        <stop offset="100%" stopColor="#D4A574" />
-                      </linearGradient>
-                    </defs>
-                  </svg>
-                  
-                  {/* Center Text */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="text-honey-gold text-6xl font-heading mb-2">∞</div>
-                      <div className="text-cream/60 text-xs tracking-widest">ТРАДИЦИИ</div>
-                    </div>
-                  </div>
+        {/* Steam Effect Overlay */}
+        <div className="absolute inset-0 steam-effect opacity-40"></div>
 
-                  {/* Floating Icons */}
-                  {[
-                    { icon: 'Flame', top: '10%', left: '20%', delay: 0 },
-                    { icon: 'Droplets', top: '20%', right: '15%', delay: 1 },
-                    { icon: 'Wind', bottom: '25%', left: '15%', delay: 2 },
-                    { icon: 'Mountain', bottom: '15%', right: '20%', delay: 1.5 }
-                  ].map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="absolute p-4 rounded-full bg-gradient-to-br from-copper/20 to-honey-gold/20 backdrop-blur-sm border border-copper/30"
-                      style={{
-                        ...item,
-                        animation: 'float 3s ease-in-out infinite',
-                        animationDelay: `${item.delay}s`
-                      }}
-                    >
-                      <Icon name={item.icon as any} size={24} className="text-honey-gold" />
-                    </div>
-                  ))}
+        {/* Content */}
+        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
+          {/* Logo as Engraved Wooden Stamp */}
+          <div className="mb-12 fade-in-up">
+            <div className="inline-block relative">
+              <div className="absolute inset-0 bg-copper/20 blur-2xl rounded-full"></div>
+              <div className="relative bg-wood-brown/80 border-4 border-copper/60 rounded-lg p-8 backdrop-blur-sm transform hover:scale-105 transition-transform duration-500" style={{ boxShadow: '0 10px 40px rgba(0,0,0,0.5), inset 0 2px 10px rgba(205,127,50,0.3)' }}>
+                <div className="text-6xl md:text-8xl font-heading text-honey-gold tracking-widest" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
+                  SL
                 </div>
+                <div className="h-0.5 bg-copper my-2"></div>
+                <div className="text-sm tracking-[0.3em] text-copper">EST. 2024</div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* About Section - Parallax */}
-      <section id="about" className="relative py-32 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-graphite via-[#1a1512] to-graphite"></div>
-        
-        {/* Parallax Background Elements */}
-        <div className="absolute inset-0 opacity-10">
-          {[...Array(3)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute text-[20vw] font-heading text-copper/20"
-              style={{
-                top: `${i * 30}%`,
-                left: `${-10 + i * 20}%`,
-                transform: `translateY(${scrollProgress * (i + 1) * 0.5}px)`,
-                transition: 'transform 0.1s ease'
-              }}
+          <h1 className="text-4xl md:text-7xl font-heading text-honey-gold mb-6 leading-tight tracking-wider" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.8)' }}>
+            Пар. Камень. Время.
+          </h1>
+
+          <p className="text-2xl md:text-4xl text-cream mb-4 font-heading font-semibold">
+            STEAMLAB
+          </p>
+
+          <div className="w-32 h-1 bg-gradient-to-r from-transparent via-copper to-transparent mx-auto mb-12"></div>
+
+          <p className="text-lg md:text-xl text-warm-light/90 mb-16 max-w-3xl mx-auto leading-relaxed">
+            Мы возвращаем древние традиции русской бани,<br className="hidden md:block" />
+            сохраняя комфорт современности
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <Button
+              onClick={() => scrollToSection('booking')}
+              className="bg-copper hover:bg-honey-gold text-white font-heading text-lg px-12 py-7 glow-hover border-2 border-copper hover:border-honey-gold transition-all duration-300 shadow-lg"
             >
-              {['ПАР', 'КАМЕНЬ', 'ВРЕМЯ'][i]}
-            </div>
-          ))}
+              <Icon name="Calendar" size={20} className="mr-2" />
+              Забронировать баню
+            </Button>
+            <Button
+              onClick={() => scrollToSection('houses')}
+              className="bg-transparent border-2 border-cream hover:bg-cream/10 hover:border-honey-gold text-cream hover:text-honey-gold font-heading text-lg px-12 py-7 transition-all duration-300"
+            >
+              <Icon name="Building2" size={20} className="mr-2" />
+              Посмотреть дома
+            </Button>
+          </div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-16 h-px bg-gradient-to-r from-transparent to-copper"></div>
-                <span className="text-copper text-sm tracking-widest">О НАС</span>
-              </div>
-              
-              <h2 className="text-5xl md:text-7xl font-heading mb-8 text-honey-gold leading-tight">
-                История,<br/>
-                написанная<br/>
-                теплом
-              </h2>
-              
-              <div className="space-y-6 text-warm-light/80">
-                <p className="text-lg leading-relaxed">
-                  Мы не просто строим бани. Мы создаём пространства, 
-                  где время течёт иначе.
-                </p>
-                
-                <p className="text-base leading-relaxed">
-                  Каждый дом — симфония натуральных материалов: массив кедра, 
-                  речной камень, кованая медь. Здесь технологии служат традициям.
-                </p>
-              </div>
-            </div>
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 animate-bounce">
+          <Icon name="ChevronDown" size={40} className="text-copper" />
+        </div>
+      </section>
 
+      {/* About Section - Philosophy & History */}
+      <section id="about" className="py-32 px-4 bg-gradient-to-b from-graphite to-[#1a1512] relative">
+        {/* Decorative Elements */}
+        <div className="absolute top-0 left-0 w-64 h-64 bg-copper/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-honey-gold/5 rounded-full blur-3xl"></div>
+
+        <div className="max-w-7xl mx-auto relative">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            {/* Left - Images with Old Russian Decorative Elements */}
             <div className="grid grid-cols-2 gap-4">
-              {[
-                { number: '3', label: 'Уникальных дома', icon: 'Home' },
-                { number: '15', label: 'Лет опыта', icon: 'Award' },
-                { number: '1000+', label: 'Довольных гостей', icon: 'Users' },
-                { number: '24/7', label: 'Поддержка', icon: 'Clock' }
-              ].map((stat, idx) => (
-                <Card 
-                  key={idx}
-                  className="p-8 bg-gradient-to-br from-[#3a2f1f] to-[#2a1f12] border-2 border-wood-brown/30 hover:border-copper/50 transition-all duration-300 group"
-                >
-                  <Icon name={stat.icon as any} size={32} className="text-copper mb-4 group-hover:scale-110 transition-transform" />
-                  <div className="text-4xl font-heading text-honey-gold mb-2">{stat.number}</div>
-                  <div className="text-sm text-cream/60">{stat.label}</div>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Bath Houses - Horizontal Scroll */}
-      <section id="houses" className="py-32 px-4 bg-[#0a0806]">
-        <div className="max-w-7xl mx-auto mb-16">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-5xl md:text-7xl font-heading text-honey-gold">
-              Выберите<br/>свой дом
-            </h2>
-            <div className="hidden md:block text-copper text-sm tracking-widest">
-              [{bathHouses.findIndex(h => h.id === selectedHouse) + 1 || 1}/{bathHouses.length}]
-            </div>
-          </div>
-          <div className="w-32 h-1 bg-gradient-to-r from-copper to-transparent"></div>
-        </div>
-
-        <div className="relative">
-          <div className="flex gap-8 overflow-x-auto pb-8 px-4 md:px-8 scroll-smooth snap-x snap-mandatory hide-scrollbar">
-            {bathHouses.map((house, index) => (
-              <div
-                key={house.id}
-                className="flex-shrink-0 w-[85vw] md:w-[600px] snap-center group"
-                onClick={() => setSelectedHouse(house.id)}
-              >
-                <Card className={`h-full bg-gradient-to-br from-[#3a2f1f] to-[#2a1f12] border-2 transition-all duration-500 cursor-pointer overflow-hidden ${
-                  selectedHouse === house.id 
-                    ? 'border-copper shadow-2xl shadow-copper/20 scale-105' 
-                    : 'border-wood-brown/30 hover:border-copper/50'
-                }`}>
-                  <div className="relative h-[400px] overflow-hidden">
-                    <img 
-                      src={house.image} 
-                      alt={house.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-                    
-                    {/* Hover Overlay */}
-                    <div className="absolute inset-0 bg-copper/0 group-hover:bg-copper/10 transition-all duration-500"></div>
-                    
-                    {/* Number Badge */}
-                    <div className="absolute top-6 right-6 w-16 h-16 rounded-full bg-copper/90 backdrop-blur flex items-center justify-center">
-                      <span className="text-3xl font-heading text-white">{index + 1}</span>
-                    </div>
-
-                    {/* Bottom Info */}
-                    <div className="absolute bottom-0 left-0 right-0 p-8">
-                      <div className="flex items-end justify-between mb-4">
-                        <div>
-                          <h3 className="text-5xl font-heading text-honey-gold mb-2">{house.name}</h3>
-                          <p className="text-cream/70 text-sm italic">{house.description}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="p-8">
-                    <div className="flex items-center justify-between mb-6 pb-6 border-b border-copper/30">
-                      <div className="flex items-center gap-3 text-cream">
-                        <Icon name="Users" size={20} />
-                        <span className="text-lg">{house.capacity}</span>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-sm text-cream/60 mb-1">от</div>
-                        <div className="text-3xl font-heading text-copper">{house.price}</div>
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-3 mb-6">
-                      {house.features.map((feature, idx) => (
-                        <div key={idx} className="flex items-start gap-2 text-warm-light text-sm">
-                          <div className="w-1.5 h-1.5 rounded-full bg-copper mt-2 flex-shrink-0"></div>
-                          <span>{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-                    
-                    <Button 
-                      className="w-full bg-copper hover:bg-honey-gold text-white font-heading text-lg py-6 group"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        scrollToSection('booking');
-                      }}
-                    >
-                      Забронировать
-                      <Icon name="ArrowRight" size={20} className="ml-2 group-hover:translate-x-2 transition-transform" />
-                    </Button>
-                  </div>
-                </Card>
+              <div className="col-span-2 h-80 rounded-xl overflow-hidden group relative border-2 border-copper/30">
+                <img
+                  src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80"
+                  alt="Баня"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                {/* Decorative Corner */}
+                <div className="absolute top-2 left-2 w-12 h-12 border-t-2 border-l-2 border-copper"></div>
+                <div className="absolute bottom-2 right-2 w-12 h-12 border-b-2 border-r-2 border-copper"></div>
               </div>
-            ))}
+              <div className="h-64 rounded-xl overflow-hidden group relative border-2 border-wood-brown/40">
+                <img
+                  src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80"
+                  alt="Печь"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+              </div>
+              <div className="h-64 rounded-xl overflow-hidden group relative border-2 border-wood-brown/40">
+                <img
+                  src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80"
+                  alt="Купель"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+              </div>
+            </div>
+
+            {/* Right - Content */}
+            <div>
+              <div className="mb-8">
+                <span className="text-copper text-xs tracking-[0.3em] uppercase">История и философия</span>
+                <div className="w-20 h-1 bg-copper mt-4 mb-6"></div>
+              </div>
+
+              <h2 className="text-5xl md:text-6xl font-heading text-honey-gold mb-8 leading-tight">
+                Современная<br />старина
+              </h2>
+
+              <div className="space-y-6 text-warm-light/80 text-base leading-relaxed">
+                <p>
+                  Мы возвращаем древние традиции бань, сохраняя комфорт современности.
+                  Каждый элемент — от печи до веника — выбран с уважением к истории.
+                </p>
+                <p>
+                  В наших банях сочетаются натуральные материалы: <strong className="text-honey-gold">сибирский кедр</strong>,
+                  <strong className="text-honey-gold"> карельская берёза</strong>, <strong className="text-honey-gold">уральский камень</strong>.
+                  Это не просто дерево — это живая память поколений.
+                </p>
+                <div className="bg-wood-brown/20 border-l-4 border-copper p-6 rounded-r-lg">
+                  <p className="text-cream font-heading text-xl md:text-2xl italic">
+                    "Баня парит,<br />баня правит,<br />баня всё поправит"
+                  </p>
+                  <span className="text-copper text-sm mt-2 block">— Русская пословица</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-6 mt-12">
+                {[
+                  { value: '12+', label: 'лет опыта' },
+                  { value: '4', label: 'банных дома' },
+                  { value: '5000+', label: 'довольных гостей' }
+                ].map((stat, idx) => (
+                  <div key={idx} className="text-center">
+                    <div className="text-4xl font-heading text-copper mb-2">{stat.value}</div>
+                    <div className="text-xs text-warm-light/60 uppercase tracking-wider">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Rituals - Diagonal Grid */}
-      <section id="rituals" className="py-32 px-4 bg-gradient-to-br from-graphite via-[#1a1512] to-graphite relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 2px 2px, #CD7F32 1px, transparent 0)`,
-            backgroundSize: '40px 40px'
-          }}></div>
-        </div>
-
-        <div className="relative max-w-7xl mx-auto">
+      {/* Houses Catalog - Wooden Plaques Style */}
+      <section id="houses" className="py-32 px-4 bg-[#1a1512] wood-texture relative">
+        <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
             <div className="inline-block mb-6">
               <div className="flex items-center gap-4">
                 <div className="w-16 h-px bg-gradient-to-r from-transparent to-copper"></div>
-                <span className="text-copper text-sm tracking-widest">РИТУАЛЫ</span>
+                <span className="text-copper text-xs tracking-[0.3em] uppercase">Каталог</span>
                 <div className="w-16 h-px bg-gradient-to-l from-transparent to-copper"></div>
               </div>
             </div>
             <h2 className="text-5xl md:text-7xl font-heading text-honey-gold mb-6">
-              Священные<br/>традиции
+              Банные дома
             </h2>
-            <p className="text-cream/60 max-w-2xl mx-auto text-lg">
-              Каждый ритуал — это диалог с вековой мудростью
+            <p className="text-cream/60 text-lg">
+              Каждый дом — уникальная атмосфера и характер
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {rituals.map((ritual, index) => (
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {houses.map((house, idx) => (
               <Card
-                key={index}
-                className="group relative bg-gradient-to-br from-[#3a2f1f] to-[#1a1512] border-2 border-wood-brown/20 hover:border-copper/60 p-8 transition-all duration-500 overflow-hidden"
-                style={{
-                  transform: index % 2 === 0 ? 'translateY(0)' : 'translateY(2rem)'
-                }}
+                key={idx}
+                className="group relative bg-gradient-to-br from-wood-brown/30 to-graphite border-2 border-wood-brown/40 hover:border-copper transition-all duration-500 overflow-hidden cursor-pointer"
               >
-                {/* Hover Effect */}
-                <div className="absolute inset-0 bg-gradient-to-br from-copper/0 to-honey-gold/0 group-hover:from-copper/5 group-hover:to-honey-gold/5 transition-all duration-500"></div>
-                
-                {/* Number */}
-                <div className="absolute top-4 right-4 text-6xl font-heading text-copper/10 group-hover:text-copper/20 transition-colors">
-                  {index + 1}
+                {/* Image */}
+                <div className="relative h-64 overflow-hidden">
+                  <img
+                    src={house.image}
+                    alt={house.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-graphite via-graphite/50 to-transparent"></div>
+
+                  {/* Wooden Plaque Name Tag */}
+                  <div className="absolute top-4 left-4 bg-wood-brown border-2 border-honey-gold px-6 py-3 rounded-sm shadow-lg" style={{ boxShadow: '0 4px 15px rgba(0,0,0,0.6)' }}>
+                    <h3 className="text-2xl font-heading text-honey-gold" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}>{house.name}</h3>
+                  </div>
+
+                  {/* Steam Effect on Hover */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 steam-effect transition-opacity duration-500 pointer-events-none"></div>
                 </div>
 
-                <div className="relative">
-                  <div className="w-16 h-16 mb-6 rounded-2xl bg-gradient-to-br from-copper/20 to-honey-gold/20 flex items-center justify-center backdrop-blur-sm border border-copper/30 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">
-                    <Icon name={ritual.icon as any} size={32} className="text-copper" />
+                {/* Content */}
+                <div className="p-6">
+                  <div className="flex items-center gap-2 text-cream/70 mb-4">
+                    <Icon name="Users" size={18} className="text-copper" />
+                    <span className="text-sm">{house.capacity}</span>
                   </div>
-                  
-                  <h3 className="text-2xl font-heading text-honey-gold mb-4 group-hover:text-copper transition-colors">
-                    {ritual.title}
-                  </h3>
-                  
-                  <p className="text-warm-light/70 text-sm leading-relaxed">
-                    {ritual.desc}
-                  </p>
 
-                  {/* Decorative Line */}
-                  <div className="mt-6 h-px bg-gradient-to-r from-copper/50 to-transparent group-hover:from-copper group-hover:to-honey-gold/50 transition-all duration-500"></div>
+                  <div className="space-y-2 mb-4">
+                    {house.features.map((feature, i) => (
+                      <div key={i} className="flex items-start gap-2 text-warm-light/70 text-sm">
+                        <div className="w-1.5 h-1.5 bg-copper rounded-full mt-1.5 flex-shrink-0"></div>
+                        <span>{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center justify-between mt-6 pt-6 border-t border-copper/20">
+                    <span className="text-2xl font-heading text-honey-gold">{house.price}</span>
+                    <Button
+                      onClick={() => scrollToSection('booking')}
+                      className="bg-copper hover:bg-honey-gold text-white px-4 py-2 text-sm transition-all duration-300 glow-hover"
+                    >
+                      Забронировать
+                    </Button>
+                  </div>
                 </div>
               </Card>
             ))}
@@ -515,176 +304,252 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Gallery - Masonry Layout */}
-      <section id="gallery" className="py-32 px-4 bg-[#0a0806] relative">
+      {/* Gallery - Steam Dissipating Effect */}
+      <section id="gallery" className="py-32 px-4 bg-gradient-to-b from-[#1a1512] to-[#0a0806] relative overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-20">
+          <div className="text-center mb-20">
             <h2 className="text-5xl md:text-7xl font-heading text-honey-gold mb-6">
               Атмосфера
             </h2>
-            <div className="flex items-center gap-4">
-              <div className="w-32 h-1 bg-gradient-to-r from-copper to-transparent"></div>
-              <p className="text-cream/60 italic text-lg">
-                История, написанная теплом
-              </p>
-            </div>
+            <div className="w-32 h-1 bg-gradient-to-r from-transparent via-copper to-transparent mx-auto mb-6"></div>
+            <p className="text-2xl font-heading text-cream italic opacity-80">
+              "Каждый дом — история, написанная теплом"
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-4 auto-rows-[200px]">
+          <div className="grid md:grid-cols-3 gap-6">
             {[
-              { img: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80', span: 'md:row-span-2 md:col-span-2', label: 'Главный зал' },
-              { img: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80', span: 'md:row-span-1', label: 'Парная' },
-              { img: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80', span: 'md:row-span-1', label: 'Чан' },
-              { img: 'https://images.unsplash.com/photo-1521133573892-e44906baee46?w=800&q=80', span: 'md:row-span-2', label: 'Терраса' },
-              { img: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80', span: 'md:col-span-2', label: 'Интерьер' }
+              {
+                img: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80',
+                label: 'Парная',
+                span: 'md:col-span-2 md:row-span-2'
+              },
+              {
+                img: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80',
+                label: 'Дрова и огонь'
+              },
+              {
+                img: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80',
+                label: 'Чан'
+              },
+              {
+                img: 'https://images.unsplash.com/photo-1521133573892-e44906baee46?w=800&q=80',
+                label: 'Русская печь'
+              },
+              {
+                img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80',
+                label: 'Купель'
+              }
             ].map((item, idx) => (
               <div
                 key={idx}
-                className={`relative overflow-hidden rounded-xl group cursor-pointer ${item.span}`}
+                className={`relative h-80 rounded-xl overflow-hidden group cursor-pointer border border-wood-brown/30 ${item.span || ''}`}
               >
-                <img 
-                  src={item.img} 
+                <img
+                  src={item.img}
                   alt={item.label}
-                  className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-2"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
-                
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-60 group-hover:opacity-30 transition-all duration-500"></div>
-                
-                {/* Label */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-px bg-copper"></div>
-                    <span className="text-honey-gold font-heading text-xl">{item.label}</span>
+
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-70 group-hover:opacity-30 transition-all duration-500"></div>
+
+                {/* Steam Dissipating Effect */}
+                <div className="absolute inset-0 steam-effect opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+
+                {/* Wooden Plaque Label */}
+                <div className="absolute bottom-6 left-6">
+                  <div className="bg-wood-brown/90 border border-honey-gold px-4 py-2 rounded-sm backdrop-blur-sm shadow-lg">
+                    <span className="text-lg font-heading text-honey-gold">{item.label}</span>
                   </div>
                 </div>
-
-                {/* Corner Accent */}
-                <div className="absolute top-4 right-4 w-12 h-12 border-t-2 border-r-2 border-copper/0 group-hover:border-copper/80 transition-all duration-500"></div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Booking - Split Layout */}
-      <section id="booking" className="py-32 px-4 bg-gradient-to-br from-graphite to-[#1a1512] relative overflow-hidden">
-        {/* Decorative Elements */}
-        <div className="absolute top-20 right-20 w-64 h-64 bg-copper/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 left-20 w-96 h-96 bg-honey-gold/5 rounded-full blur-3xl"></div>
+      {/* Rituals Section - Old Herbalist Style */}
+      <section id="rituals" className="py-32 px-4 bg-[#0a0806] relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `radial-gradient(circle at 2px 2px, #CD7F32 1px, transparent 0)`,
+              backgroundSize: '40px 40px'
+            }}
+          ></div>
+        </div>
 
-        <div className="max-w-7xl mx-auto relative">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Left - Info */}
-            <div>
-              <div className="mb-8">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-px bg-gradient-to-r from-transparent to-copper"></div>
-                  <span className="text-copper text-sm tracking-widest">БРОНИРОВАНИЕ</span>
-                </div>
-                
-                <h2 className="text-5xl md:text-7xl font-heading text-honey-gold mb-6 leading-tight">
-                  Начните<br/>
-                  ваше<br/>
-                  путешествие
-                </h2>
-                
-                <p className="text-warm-light/70 text-lg leading-relaxed mb-8">
-                  Оставьте заявку, и наш координатор свяжется с вами 
-                  в течение 15 минут для уточнения деталей
-                </p>
-              </div>
+        <div className="relative max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <span className="text-copper text-xs tracking-[0.3em] uppercase">Традиции</span>
+            <div className="w-20 h-1 bg-copper mx-auto mt-4 mb-8"></div>
+            <h2 className="text-5xl md:text-7xl font-heading text-honey-gold mb-6">
+              Ритуалы и традиции
+            </h2>
+            <p className="text-cream/60 text-lg max-w-2xl mx-auto">
+              Каждая процедура — диалог с вековой мудростью предков
+            </p>
+          </div>
 
-              <div className="space-y-4">
-                {[
-                  { icon: 'Clock', text: 'Работаем 24/7 без выходных' },
-                  { icon: 'Shield', text: 'Гарантия безопасности' },
-                  { icon: 'Sparkles', text: 'Индивидуальный подход' }
-                ].map((item, idx) => (
-                  <div key={idx} className="flex items-center gap-4 text-cream/70">
-                    <div className="w-10 h-10 rounded-full bg-copper/10 flex items-center justify-center border border-copper/30">
-                      <Icon name={item.icon as any} size={18} className="text-copper" />
-                    </div>
-                    <span>{item.text}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {rituals.map((ritual, idx) => (
+              <Card
+                key={idx}
+                className="group relative bg-gradient-to-br from-[#3a2f1f] to-[#1a1512] border-2 border-wood-brown/30 hover:border-copper/60 p-8 transition-all duration-500 overflow-hidden text-center"
+              >
+                {/* Background Glow */}
+                <div className="absolute inset-0 bg-gradient-to-br from-copper/0 to-honey-gold/0 group-hover:from-copper/10 group-hover:to-honey-gold/5 transition-all duration-500"></div>
 
-            {/* Right - Form */}
-            <Card className="p-8 md:p-12 bg-gradient-to-br from-[#3a2f1f] to-[#2a1f12] border-2 border-copper/20 backdrop-blur-sm">
-              <form onSubmit={handleBooking} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-cream mb-3 font-heading text-sm tracking-wide">Ваше имя</label>
-                    <Input 
-                      required
-                      className="bg-[#1a1512] border-copper/30 text-cream focus:ring-copper focus:border-copper transition-all h-12" 
-                      placeholder="Иван Иванович"
-                    />
+                <div className="relative">
+                  {/* Icon in Ornate Circle */}
+                  <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-copper/30 to-honey-gold/20 flex items-center justify-center border-2 border-copper/50 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-lg">
+                    <Icon name={ritual.icon as any} size={36} className="text-copper" />
                   </div>
-                  
-                  <div>
-                    <label className="block text-cream mb-3 font-heading text-sm tracking-wide">Телефон</label>
-                    <Input 
-                      required
-                      type="tel"
-                      className="bg-[#1a1512] border-copper/30 text-cream focus:ring-copper focus:border-copper transition-all h-12" 
-                      placeholder="+7 (999) 123-45-67"
-                    />
-                  </div>
-                </div>
-                
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-cream mb-3 font-heading text-sm tracking-wide">Дата и время</label>
-                    <Input 
-                      required
-                      type="datetime-local"
-                      className="bg-[#1a1512] border-copper/30 text-cream focus:ring-copper focus:border-copper transition-all h-12" 
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-cream mb-3 font-heading text-sm tracking-wide">Количество гостей</label>
-                    <Input 
-                      required
-                      type="number"
-                      min="1"
-                      className="bg-[#1a1512] border-copper/30 text-cream focus:ring-copper focus:border-copper transition-all h-12" 
-                      placeholder="4"
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <label className="block text-cream mb-3 font-heading text-sm tracking-wide">Комментарий</label>
-                  <Textarea 
-                    className="bg-[#1a1512] border-copper/30 text-cream focus:ring-copper focus:border-copper transition-all resize-none" 
-                    placeholder="Дополнительные пожелания..."
-                    rows={4}
-                  />
-                </div>
-                
-                <Button 
-                  type="submit"
-                  className="w-full bg-copper hover:bg-honey-gold text-white font-heading text-lg py-6 transition-all duration-300 group border-2 border-copper hover:border-honey-gold"
-                >
-                  Отправить заявку
-                  <Icon name="Send" size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
 
-                <p className="text-center text-cream/40 text-xs">
-                  Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
-                </p>
-              </form>
-            </Card>
+                  <h3 className="text-2xl font-heading text-honey-gold mb-4 group-hover:text-copper transition-colors">
+                    {ritual.title}
+                  </h3>
+
+                  <p className="text-warm-light/70 text-sm leading-relaxed">{ritual.desc}</p>
+
+                  {/* Decorative Line */}
+                  <div className="mt-6 h-px bg-gradient-to-r from-transparent via-copper/50 to-transparent group-hover:via-copper transition-all duration-500"></div>
+                </div>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Footer - Modern */}
-      <footer className="bg-[#0a0806] py-16 px-4 border-t border-copper/10">
+      {/* Booking Form - Warm Glow Effect */}
+      <section id="booking" className="py-32 px-4 bg-gradient-to-br from-graphite to-[#1a1512] relative overflow-hidden">
+        {/* Warm Candle-like Glow Effects */}
+        <div className="absolute top-20 right-20 w-96 h-96 bg-copper/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }}></div>
+        <div className="absolute bottom-20 left-20 w-96 h-96 bg-honey-gold/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }}></div>
+
+        <div className="max-w-5xl mx-auto relative">
+          <div className="text-center mb-16">
+            <span className="text-copper text-xs tracking-[0.3em] uppercase">Бронирование</span>
+            <div className="w-20 h-1 bg-copper mx-auto mt-4 mb-8"></div>
+            <h2 className="text-5xl md:text-7xl font-heading text-honey-gold mb-6">
+              Начните ваше<br />путешествие
+            </h2>
+            <p className="text-cream/70 text-lg">
+              Оставьте заявку, и наш координатор свяжется с вами в течение 15 минут
+            </p>
+          </div>
+
+          <Card className="p-8 md:p-12 bg-gradient-to-br from-[#3a2f1f]/80 to-[#2a1f12]/80 border-2 border-copper/30 backdrop-blur-sm relative overflow-hidden shadow-2xl">
+            {/* Warm Glow Inside Form */}
+            <div className="absolute -top-20 -right-20 w-64 h-64 bg-honey-gold/10 rounded-full blur-3xl"></div>
+
+            <form onSubmit={handleBooking} className="space-y-6 relative">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-cream mb-3 font-heading text-sm tracking-wide">
+                    Ваше имя
+                  </label>
+                  <Input
+                    required
+                    className="bg-[#1a1512] border-copper/40 text-cream focus:ring-copper focus:border-honey-gold transition-all h-12 focus:shadow-[0_0_20px_rgba(212,165,116,0.4)]"
+                    placeholder="Иван Иванович"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-cream mb-3 font-heading text-sm tracking-wide">
+                    Телефон
+                  </label>
+                  <Input
+                    required
+                    type="tel"
+                    className="bg-[#1a1512] border-copper/40 text-cream focus:ring-copper focus:border-honey-gold transition-all h-12 focus:shadow-[0_0_20px_rgba(212,165,116,0.4)]"
+                    placeholder="+7 (999) 123-45-67"
+                  />
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-cream mb-3 font-heading text-sm tracking-wide">
+                    Дата и время
+                  </label>
+                  <Input
+                    required
+                    type="datetime-local"
+                    className="bg-[#1a1512] border-copper/40 text-cream focus:ring-copper focus:border-honey-gold transition-all h-12 focus:shadow-[0_0_20px_rgba(212,165,116,0.4)]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-cream mb-3 font-heading text-sm tracking-wide">
+                    Количество гостей
+                  </label>
+                  <Input
+                    required
+                    type="number"
+                    min="1"
+                    className="bg-[#1a1512] border-copper/40 text-cream focus:ring-copper focus:border-honey-gold transition-all h-12 focus:shadow-[0_0_20px_rgba(212,165,116,0.4)]"
+                    placeholder="4"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-cream mb-3 font-heading text-sm tracking-wide">
+                  Комментарий
+                </label>
+                <Textarea
+                  className="bg-[#1a1512] border-copper/40 text-cream focus:ring-copper focus:border-honey-gold transition-all resize-none focus:shadow-[0_0_20px_rgba(212,165,116,0.4)]"
+                  placeholder="Дополнительные пожелания..."
+                  rows={4}
+                />
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full bg-copper hover:bg-honey-gold text-white font-heading text-lg py-6 transition-all duration-300 group border-2 border-copper hover:border-honey-gold glow-hover shadow-lg"
+              >
+                Отправить заявку
+                <Icon
+                  name="Send"
+                  size={20}
+                  className="ml-2 group-hover:translate-x-1 transition-transform"
+                />
+              </Button>
+
+              <p className="text-center text-cream/40 text-xs mt-4">
+                Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
+              </p>
+            </form>
+          </Card>
+
+          {/* Info Cards */}
+          <div className="grid md:grid-cols-3 gap-6 mt-12">
+            {[
+              { icon: 'Clock', text: 'Работаем 24/7 без выходных' },
+              { icon: 'Shield', text: 'Гарантия безопасности' },
+              { icon: 'Sparkles', text: 'Индивидуальный подход' }
+            ].map((item, idx) => (
+              <div
+                key={idx}
+                className="flex items-center gap-4 bg-[#2a1f12]/50 border border-copper/20 rounded-xl p-4 hover:border-copper/50 transition-all duration-300"
+              >
+                <div className="w-12 h-12 rounded-full bg-copper/10 flex items-center justify-center border border-copper/30">
+                  <Icon name={item.icon as any} size={20} className="text-copper" />
+                </div>
+                <span className="text-cream/70 text-sm">{item.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer with Wood Texture */}
+      <footer className="bg-[#0a0806] wood-texture py-16 px-4 border-t border-copper/20 relative">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-12 gap-12 mb-16">
             {/* Brand */}
@@ -695,17 +560,20 @@ export default function Index() {
                 </div>
                 <div className="w-24 h-1 bg-gradient-to-r from-copper to-transparent mb-4"></div>
               </div>
-              <p className="text-warm-light/60 text-sm leading-relaxed mb-6">
-                Традиции живут в тепле.<br/>
-                Возрождаем древнее искусство банной культуры.
+              <p className="text-warm-light/60 text-sm leading-relaxed mb-6 italic font-heading text-lg">
+                "Традиции живут в тепле"
               </p>
               <div className="flex gap-3">
-                {['Instagram', 'Facebook', 'Youtube'].map(social => (
+                {['Instagram', 'Facebook', 'Youtube'].map((social) => (
                   <button
                     key={social}
                     className="w-12 h-12 rounded-full bg-gradient-to-br from-copper/20 to-honey-gold/10 border border-copper/30 flex items-center justify-center hover:border-copper hover:scale-110 transition-all duration-300 group"
                   >
-                    <Icon name={social as any} size={18} className="text-copper group-hover:text-honey-gold transition-colors" />
+                    <Icon
+                      name={social as any}
+                      size={18}
+                      className="text-copper group-hover:text-honey-gold transition-colors"
+                    />
                   </button>
                 ))}
               </div>
@@ -717,10 +585,10 @@ export default function Index() {
               <div className="space-y-3">
                 {[
                   { label: 'Главная', id: 'hero' },
+                  { label: 'О нас', id: 'about' },
                   { label: 'Дома', id: 'houses' },
-                  { label: 'Ритуалы', id: 'rituals' },
-                  { label: 'Галерея', id: 'gallery' }
-                ].map(link => (
+                  { label: 'Ритуалы', id: 'rituals' }
+                ].map((link) => (
                   <button
                     key={link.id}
                     onClick={() => scrollToSection(link.id)}
@@ -747,7 +615,10 @@ export default function Index() {
             <div className="md:col-span-3">
               <h4 className="font-heading text-cream mb-6 text-lg">Контакты</h4>
               <div className="space-y-4">
-                <a href="tel:+79991234567" className="flex items-center gap-3 text-warm-light/70 hover:text-copper transition-colors text-sm group">
+                <a
+                  href="tel:+79991234567"
+                  className="flex items-center gap-3 text-warm-light/70 hover:text-copper transition-colors text-sm group"
+                >
                   <div className="w-10 h-10 rounded-full bg-copper/10 flex items-center justify-center border border-copper/30 group-hover:border-copper transition-all">
                     <Icon name="Phone" size={16} className="text-copper" />
                   </div>
@@ -756,8 +627,11 @@ export default function Index() {
                     +7 (999) 123-45-67
                   </div>
                 </a>
-                
-                <a href="mailto:info@steamlab.ru" className="flex items-center gap-3 text-warm-light/70 hover:text-copper transition-colors text-sm group">
+
+                <a
+                  href="mailto:info@steamlab.ru"
+                  className="flex items-center gap-3 text-warm-light/70 hover:text-copper transition-colors text-sm group"
+                >
                   <div className="w-10 h-10 rounded-full bg-copper/10 flex items-center justify-center border border-copper/30 group-hover:border-copper transition-all">
                     <Icon name="Mail" size={16} className="text-copper" />
                   </div>
@@ -766,7 +640,7 @@ export default function Index() {
                     info@steamlab.ru
                   </div>
                 </a>
-                
+
                 <div className="flex items-center gap-3 text-warm-light/70 text-sm">
                   <div className="w-10 h-10 rounded-full bg-copper/10 flex items-center justify-center border border-copper/30">
                     <Icon name="MapPin" size={16} className="text-copper" />
@@ -786,8 +660,12 @@ export default function Index() {
               © 2024 STEAMLAB. Все права защищены.
             </div>
             <div className="flex gap-6 text-xs text-warm-light/40">
-              <button className="hover:text-copper transition-colors">Политика конфиденциальности</button>
-              <button className="hover:text-copper transition-colors">Условия использования</button>
+              <button className="hover:text-copper transition-colors">
+                Политика конфиденциальности
+              </button>
+              <button className="hover:text-copper transition-colors">
+                Условия использования
+              </button>
             </div>
           </div>
         </div>
