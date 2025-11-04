@@ -6,7 +6,7 @@ export default {
 		"./pages/**/*.{ts,tsx}",
 		"./components/**/*.{ts,tsx}",
 		"./app/**/*.{ts,tsx}",
-		"./src/**/*.{ts,tsx}",
+		"./src/**/*.{ts,tsx}"
 	],
 	prefix: "",
 	theme: {
@@ -19,6 +19,12 @@ export default {
 		},
 		extend: {
 			colors: {
+				'wood-brown': '#8B4513',
+				'honey-gold': '#D4A574',
+				'graphite': '#2C2C2C',
+				'cream': '#F5E6D3',
+				'copper': '#CD7F32',
+				'warm-light': '#FFF8E7',
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',

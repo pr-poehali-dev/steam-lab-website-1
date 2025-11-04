@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -97,5 +99,80 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .font-heading {
+    font-family: "Cormorant", serif;
+  }
+
+  .font-body {
+    font-family: "Inter", sans-serif;
+  }
+
+  .steam-effect {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .steam-effect::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 70%
+    );
+    animation: steam 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes steam {
+    0%,
+    100% {
+      transform: translate(0, 0) scale(1);
+      opacity: 0;
+    }
+    50% {
+      transform: translate(10px, -20px) scale(1.1);
+      opacity: 0.3;
+    }
+  }
+
+  .wood-texture {
+    background-image:
+      linear-gradient(90deg, rgba(139, 69, 19, 0.1) 1px, transparent 1px),
+      linear-gradient(rgba(139, 69, 19, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .glow-hover {
+    transition: all 0.3s ease;
+  }
+
+  .glow-hover:hover {
+    box-shadow: 0 0 20px rgba(205, 127, 50, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
