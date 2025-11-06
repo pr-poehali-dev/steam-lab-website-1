@@ -288,14 +288,14 @@ export default function Index() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {houses.map((house, idx) => (
               <Card
                 key={idx}
-                className="group relative bg-gradient-to-br from-wood-brown/30 to-graphite border-2 border-wood-brown/40 hover:border-copper transition-all duration-500 overflow-hidden cursor-pointer"
+                className="group relative bg-gradient-to-br from-wood-brown/30 to-graphite border-2 border-wood-brown/40 hover:border-copper transition-all duration-500 overflow-hidden cursor-pointer flex flex-col"
               >
                 {/* Image */}
-                <div className="relative h-64 overflow-hidden">
+                <div className="relative h-56 sm:h-64 overflow-hidden flex-shrink-0">
                   <img
                     src={house.image}
                     alt={house.name}
@@ -304,8 +304,8 @@ export default function Index() {
                   <div className="absolute inset-0 bg-gradient-to-t from-graphite via-graphite/50 to-transparent"></div>
 
                   {/* Wooden Plaque Name Tag */}
-                  <div className="absolute top-4 left-4 bg-wood-brown border-2 border-honey-gold px-6 py-3 rounded-sm shadow-lg" style={{ boxShadow: '0 4px 15px rgba(0,0,0,0.6)' }}>
-                    <h3 className="text-2xl font-heading text-honey-gold" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}>{house.name}</h3>
+                  <div className="absolute top-3 left-3 bg-wood-brown border-2 border-honey-gold px-4 py-2 rounded-sm shadow-lg" style={{ boxShadow: '0 4px 15px rgba(0,0,0,0.6)' }}>
+                    <h3 className="text-lg sm:text-xl font-heading text-honey-gold" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}>{house.name}</h3>
                   </div>
 
                   {/* Steam Effect on Hover */}
@@ -313,29 +313,34 @@ export default function Index() {
                 </div>
 
                 {/* Content */}
-                <div className="p-6">
+                <div className="p-5 flex flex-col flex-grow">
                   <div className="flex items-center gap-2 text-cream/70 mb-4">
-                    <Icon name="Users" size={18} className="text-copper" />
+                    <Icon name="Users" size={16} className="text-copper flex-shrink-0" />
                     <span className="text-sm">{house.capacity}</span>
                   </div>
 
-                  <div className="space-y-2 mb-4">
+                  <div className="space-y-2 mb-4 flex-grow">
                     {house.features.map((feature, i) => (
                       <div key={i} className="flex items-start gap-2 text-warm-light/70 text-sm">
                         <div className="w-1.5 h-1.5 bg-copper rounded-full mt-1.5 flex-shrink-0"></div>
-                        <span>{feature}</span>
+                        <span className="leading-tight">{feature}</span>
                       </div>
                     ))}
                   </div>
 
-                  <div className="flex items-center justify-between mt-6 pt-6 border-t border-copper/20">
-                    <span className="text-2xl font-heading text-honey-gold">{house.price}</span>
-                    <Button
-                      onClick={() => scrollToSection('booking')}
-                      className="bg-copper hover:bg-honey-gold text-white px-4 py-2 text-sm transition-all duration-300 glow-hover"
-                    >
-                      Забронировать
-                    </Button>
+                  {/* Price and Button Section */}
+                  <div className="mt-auto pt-4 border-t border-copper/20">
+                    <div className="flex flex-col gap-3">
+                      <div className="text-center">
+                        <div className="text-2xl sm:text-3xl font-heading text-honey-gold">{house.price}</div>
+                      </div>
+                      <Button
+                        onClick={() => scrollToSection('booking')}
+                        className="w-full bg-copper hover:bg-honey-gold text-white px-4 py-2.5 text-sm transition-all duration-300 glow-hover"
+                      >
+                        Забронировать
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </Card>
@@ -345,25 +350,38 @@ export default function Index() {
       </section>
 
       {/* Gallery - Steam Dissipating Effect */}
-      <section id="gallery" className="py-32 px-4 bg-gradient-to-b from-[#1a1512] to-[#0a0806] relative overflow-hidden">
+      <section id="gallery" className="py-20 sm:py-32 px-4 bg-gradient-to-b from-[#1a1512] to-[#0a0806] relative overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-7xl font-heading text-honey-gold mb-6">
+          <div className="text-center mb-12 sm:mb-20">
+            <h2 className="text-4xl sm:text-5xl md:text-7xl font-heading text-honey-gold mb-4 sm:mb-6">
               Атмосфера
             </h2>
-            <div className="w-32 h-1 bg-gradient-to-r from-transparent via-copper to-transparent mx-auto mb-6"></div>
-            <p className="text-2xl font-heading text-cream italic opacity-80">
+            <div className="w-32 h-1 bg-gradient-to-r from-transparent via-copper to-transparent mx-auto mb-4 sm:mb-6"></div>
+            <p className="text-lg sm:text-2xl font-heading text-cream italic opacity-80 px-4">
               "Каждый дом — история, написанная теплом"
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          {/* Mobile: 1 column, Tablet: 2 columns, Desktop: Grid layout */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {/* Large featured image - full width on mobile */}
+            <div className="relative h-64 sm:h-80 lg:col-span-2 lg:row-span-2 lg:h-auto rounded-xl overflow-hidden group cursor-pointer border border-wood-brown/30">
+              <img
+                src="https://cdn.poehali.dev/projects/61c9ef47-8470-48ca-ad6d-16ef5c43a5d9/files/70d4afec-8954-4202-b1f3-2583dc5e4ff4.jpg"
+                alt="Парная"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-70 group-hover:opacity-30 transition-all duration-500"></div>
+              <div className="absolute inset-0 steam-effect opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+              <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6">
+                <div className="bg-wood-brown/90 border border-honey-gold px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm backdrop-blur-sm shadow-lg">
+                  <span className="text-base sm:text-lg font-heading text-honey-gold">Парная</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Small images */}
             {[
-              {
-                img: 'https://cdn.poehali.dev/projects/61c9ef47-8470-48ca-ad6d-16ef5c43a5d9/files/70d4afec-8954-4202-b1f3-2583dc5e4ff4.jpg',
-                label: 'Парная',
-                span: 'md:col-span-2 md:row-span-2'
-              },
               {
                 img: 'https://cdn.poehali.dev/projects/61c9ef47-8470-48ca-ad6d-16ef5c43a5d9/files/41a19465-4020-499d-b072-a698e653c069.jpg',
                 label: 'Дрова и огонь'
@@ -383,24 +401,18 @@ export default function Index() {
             ].map((item, idx) => (
               <div
                 key={idx}
-                className={`relative h-80 rounded-xl overflow-hidden group cursor-pointer border border-wood-brown/30 ${item.span || ''}`}
+                className="relative h-48 sm:h-64 lg:h-auto lg:aspect-square rounded-xl overflow-hidden group cursor-pointer border border-wood-brown/30"
               >
                 <img
                   src={item.img}
                   alt={item.label}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
-
-                {/* Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent opacity-70 group-hover:opacity-30 transition-all duration-500"></div>
-
-                {/* Steam Dissipating Effect */}
                 <div className="absolute inset-0 steam-effect opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-
-                {/* Wooden Plaque Label */}
-                <div className="absolute bottom-6 left-6">
-                  <div className="bg-wood-brown/90 border border-honey-gold px-4 py-2 rounded-sm backdrop-blur-sm shadow-lg">
-                    <span className="text-lg font-heading text-honey-gold">{item.label}</span>
+                <div className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4">
+                  <div className="bg-wood-brown/90 border border-honey-gold px-3 py-1.5 rounded-sm backdrop-blur-sm shadow-lg">
+                    <span className="text-sm sm:text-base font-heading text-honey-gold">{item.label}</span>
                   </div>
                 </div>
               </div>
