@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -6,6 +6,33 @@ import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
 
 export default function Index() {
+  const [isSoundEnabled, setIsSoundEnabled] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    audioRef.current = new Audio('https://cdn.pixabay.com/audio/2022/03/10/audio_4c0e4f764a.mp3');
+    audioRef.current.loop = true;
+    audioRef.current.volume = 0.3;
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  const toggleSound = () => {
+    if (audioRef.current) {
+      if (isSoundEnabled) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsSoundEnabled(!isSoundEnabled);
+    }
+  };
+
   const handleBooking = (e: React.FormEvent) => {
     e.preventDefault();
     alert('Спасибо! Мы свяжемся с вами в ближайшее время.');
@@ -22,28 +49,28 @@ export default function Index() {
       capacity: '6-8 человек',
       price: '8 000 ₽/час',
       features: ['Купель из лиственницы', 'Печь на дровах', 'Веники в подарок'],
-      image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80'
+      image: 'https://cdn.poehali.dev/projects/61c9ef47-8470-48ca-ad6d-16ef5c43a5d9/files/1191e4c8-1107-4568-80fe-1a1e1a11ae28.jpg'
     },
     {
       name: 'Княжеская',
       capacity: '10-12 человек',
       price: '12 000 ₽/час',
       features: ['Чан под звёздами', 'Панорамные окна', 'Бильярдная'],
-      image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80'
+      image: 'https://cdn.poehali.dev/projects/61c9ef47-8470-48ca-ad6d-16ef5c43a5d9/files/4d04bc97-9bf4-425e-b596-de4b673e602a.jpg'
     },
     {
       name: 'Купеческая',
       capacity: '4-6 человек',
       price: '6 000 ₽/час',
       features: ['Камин', 'Травяные чаи', 'Терраса у реки'],
-      image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&q=80'
+      image: 'https://cdn.poehali.dev/projects/61c9ef47-8470-48ca-ad6d-16ef5c43a5d9/files/f8867db1-ca00-4178-b3e0-ab0977fdd030.jpg'
     },
     {
       name: 'Царская VIP',
       capacity: '12-16 человек',
       price: '18 000 ₽/час',
       features: ['Массажная зона', 'Караоке', 'Ресторанный зал', 'Частный берег'],
-      image: 'https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=600&q=80'
+      image: 'https://cdn.poehali.dev/projects/61c9ef47-8470-48ca-ad6d-16ef5c43a5d9/files/c889099b-001a-4c8d-8f84-91ef3d514d9d.jpg'
     }
   ];
 
@@ -72,6 +99,19 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-graphite font-body text-cream overflow-x-hidden">
+      {/* Sound Toggle Button */}
+      <button
+        onClick={toggleSound}
+        className="fixed top-6 right-6 z-50 w-14 h-14 rounded-full bg-wood-brown/80 border-2 border-copper/60 flex items-center justify-center backdrop-blur-sm hover:scale-110 transition-all duration-300 group shadow-lg"
+        title={isSoundEnabled ? 'Выключить звук' : 'Включить звук'}
+      >
+        <Icon
+          name={isSoundEnabled ? 'Volume2' : 'VolumeX'}
+          size={24}
+          className="text-copper group-hover:text-honey-gold transition-colors"
+        />
+      </button>
+
       {/* Hero Section with Video Background */}
       <section id="hero" className="relative h-screen flex items-center justify-center overflow-hidden">
         {/* Video Background */}
@@ -158,7 +198,7 @@ export default function Index() {
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2 h-80 rounded-xl overflow-hidden group relative border-2 border-copper/30">
                 <img
-                  src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80"
+                  src="https://cdn.poehali.dev/projects/61c9ef47-8470-48ca-ad6d-16ef5c43a5d9/files/70d4afec-8954-4202-b1f3-2583dc5e4ff4.jpg"
                   alt="Баня"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
@@ -169,14 +209,14 @@ export default function Index() {
               </div>
               <div className="h-64 rounded-xl overflow-hidden group relative border-2 border-wood-brown/40">
                 <img
-                  src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80"
+                  src="https://cdn.poehali.dev/projects/61c9ef47-8470-48ca-ad6d-16ef5c43a5d9/files/41a19465-4020-499d-b072-a698e653c069.jpg"
                   alt="Печь"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
               </div>
               <div className="h-64 rounded-xl overflow-hidden group relative border-2 border-wood-brown/40">
                 <img
-                  src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80"
+                  src="https://cdn.poehali.dev/projects/61c9ef47-8470-48ca-ad6d-16ef5c43a5d9/files/f8867db1-ca00-4178-b3e0-ab0977fdd030.jpg"
                   alt="Купель"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
@@ -320,25 +360,25 @@ export default function Index() {
           <div className="grid md:grid-cols-3 gap-6">
             {[
               {
-                img: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80',
+                img: 'https://cdn.poehali.dev/projects/61c9ef47-8470-48ca-ad6d-16ef5c43a5d9/files/70d4afec-8954-4202-b1f3-2583dc5e4ff4.jpg',
                 label: 'Парная',
                 span: 'md:col-span-2 md:row-span-2'
               },
               {
-                img: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&q=80',
+                img: 'https://cdn.poehali.dev/projects/61c9ef47-8470-48ca-ad6d-16ef5c43a5d9/files/41a19465-4020-499d-b072-a698e653c069.jpg',
                 label: 'Дрова и огонь'
               },
               {
-                img: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&q=80',
+                img: 'https://cdn.poehali.dev/projects/61c9ef47-8470-48ca-ad6d-16ef5c43a5d9/files/f8867db1-ca00-4178-b3e0-ab0977fdd030.jpg',
                 label: 'Чан'
               },
               {
-                img: 'https://images.unsplash.com/photo-1521133573892-e44906baee46?w=800&q=80',
+                img: 'https://cdn.poehali.dev/projects/61c9ef47-8470-48ca-ad6d-16ef5c43a5d9/files/41a19465-4020-499d-b072-a698e653c069.jpg',
                 label: 'Русская печь'
               },
               {
-                img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80',
-                label: 'Купель'
+                img: 'https://cdn.poehali.dev/projects/61c9ef47-8470-48ca-ad6d-16ef5c43a5d9/files/56ed2a49-74ac-4824-8fc9-3dbad23eba42.jpg',
+                label: 'Травяные чаи'
               }
             ].map((item, idx) => (
               <div
